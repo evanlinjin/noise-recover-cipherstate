@@ -1,1 +1,5 @@
-package recoverable_node
+package main
+
+func main() {
+
+}

@@ -6,33 +6,33 @@ import (
 )
 
 const (
-	ks = 32
+	kLen = 32
 )
 
-func RandSecKey(r io.Reader) [ks]byte {
-	var sk [ks]byte
+func RandSecKey(r io.Reader) [kLen]byte {
+	var sk [kLen]byte
 	if n, err := io.ReadFull(r, sk[:]); err != nil {
 		panic(err)
-	} else if n != ks {
+	} else if n != kLen {
 		panic("invalid rand read length")
 	}
 	return sk
 }
 
-func PubKeyFromSecKey(sk [ks]byte) [ks]byte {
-	var pk [ks]byte
+func PubKeyFromSecKey(sk [kLen]byte) [kLen]byte {
+	var pk [kLen]byte
 	curve25519.ScalarBaseMult(&pk, &sk)
 	return pk
 }
 
-func RandPair(r io.Reader) ([ks]byte, [ks]byte) {
+func RandPair(r io.Reader) ([kLen]byte, [kLen]byte) {
 	sk := RandSecKey(r)
 	pk := PubKeyFromSecKey(sk)
 	return pk, sk
 }
 
-func ECDH(localSK, remotePK [ks]byte) [ks]byte {
-	var ecdh [ks]byte
+func ECDH(localSK, remotePK [kLen]byte) [kLen]byte {
+	var ecdh [kLen]byte
 	curve25519.ScalarMult(&ecdh, &localSK, &remotePK)
 	return ecdh
 }
